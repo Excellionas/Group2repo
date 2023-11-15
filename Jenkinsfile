@@ -23,7 +23,7 @@ pipeline {
       steps {
           sh 'pwd;cd terraform/ ; terraform init'
           sh "pwd;cd terraform/ ; terraform plan -out tfplan"
-          sh 'pwd;cd terrafrom/ ; terraform show -no-color tfplan > tfplan.txt
+          sh 'pwd;cd terrafrom/ ; terraform show -no-color tfplan > tfplan.txt'
       }
   }
   stage('Approval') {
