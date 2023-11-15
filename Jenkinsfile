@@ -1,47 +1,47 @@
 pipeline {
-    parameters {
-        booleanParam(name: 'autoApprove', defaultValue: false, description: 'Automatically run apply after generating plan?')
-    }
-
     agent any
 
+    environment {
+        AWS_DEFAULT_REGION = 'eu-west-1'
+        AWS_ACCESS_KEY_ID = 'ASIAYWLM7DRWA6USHOYA'
+        AWS_SECRET_ACCESS_KEY = 'G8QlPb/gkrhiRiaxSt5Vbk1R8Nc5TATheLtRzh+X'
+        AWS_SESSION_TOKEN = 'FwoGZXIvYXdzEDgaDC1lPQTkvfMqBkV/5SKGAdGrXLarITb2C/1bbEeBGGtYF7X4HUmcQDV4T8DGz5kxmpFiEu5/oaLTYiby8g+YBWPOfZ0vHECc177PWxvt9U9tejJ4SIEbYlVCFH0o+kLxvOsv6f1Q10cxXGg59h9NVrNhRalGN3L149stpQnph6nxY9ix20BLl0djdkW7g/ZD1sbBYCO3KIjI0aoGMijjela5xoCJRmuc/tYtMXWavOkats1XDS46OSrqOv7CILXwMY9L04+W'
+    }
+
     stages {
-        stage('checkout') {
+        stage('Checkout') {
             steps {
                 script {
-                    dir("terraform") {
-                        git "https://github.com/Hosihiro/Group2repo.git"
-                    }
+                    // Checkout the Terraform script from GitHub
+                    git 'https://github.com/Hosihiro/Group2repo.git'
                 }
             }
         }
 
-        stage('Plan') {
-            steps {
-                sh 'pwd; cd terraform/ ; terraform init'
-                sh 'pwd; cd terraform/ ; terraform plan -out tfplan'
-                sh 'pwd; cd terraform/ ; terraform show -no-color tfplan > tfplan.txt'
-            }
-        }
-
-        stage('Approval') {
-            when {
-                not {
-                    equals expected: true, actual: params.autoApprove
-                }
-            }
-
+        stage('Terraform Init') {
             steps {
                 script {
-                    def plan = readFile 'terraform/tfplan.txt'
-                    input message: "Do you want to apply the plan?", parameters: [text(name: 'Plan', description: 'Please review the plan', defaultValue: plan)]
+                    // Initialize Terraform
+                    sh 'terraform init'
                 }
             }
         }
 
-        stage('Apply') {
+        stage('Terraform Apply') {
             steps {
-                sh 'pwd; cd terraform/ ; terraform apply -input=false tfplan'
+                script {
+                    // Apply Terraform changes
+                    sh 'terraform apply -auto-approve'
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            // Cleanup, e.g., destroy resources if needed
+            script {
+                sh 'terraform destroy -auto-approve'
             }
         }
     }
