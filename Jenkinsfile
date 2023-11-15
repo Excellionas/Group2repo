@@ -4,9 +4,9 @@ pipeline {
         stage("verify tools") {
             steps {
                 sh '''
-                docker info
                 docker version
                 docker compose version
+                docker info
                 curl --version
                 jq --version
                 '''
