@@ -13,7 +13,7 @@ pipeline {
             steps {
                 script {
                     // Checkout the Terraform script from GitHub
-                    git 'https://github.com/Hosihiro/Group2repo.git'
+                    checkout scm
                 }
             }
         }
