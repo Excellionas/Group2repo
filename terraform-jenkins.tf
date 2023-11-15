@@ -12,9 +12,8 @@ resource "aws_instance" "Group2_Week_Project" {
   root_block_device {
     volume_size = 30
   }
-  user_data = file("user.data.sh")
   tags = {
-    Name = "Group2_web"
+    Name = "Group2_web1"
   }
   lifecycle {
     create_before_destroy = true
