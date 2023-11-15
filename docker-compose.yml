@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  backdrop:
+    image: backdrop
+    links:
+      - db:mysql
+    ports:
+      - "80:80"
+
+  db:
+    image: mysql
+    environment:
+      MYSQL_USER: backdrop
+      MYSQL_PASSWORD: backdrop
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+      MYSQL_DATABASE: backdrop
